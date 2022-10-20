@@ -1,0 +1,22 @@
+﻿<html>
+<head>
+<title>
+テンプレート
+</title>
+</head>
+<body>
+<p><div id="d1"></div></p>
+<script type="text/javascript">
+  var hp = 2;
+  var HpDeadLine = 0;
+  var result;
+
+  if(hp <= HpDeadLine){
+    result = "ゲームオーバー";
+  }else{
+    result = "継続";
+  }
+  document.getElementById("d1").innerHTML = result;
+</script>
+</body>
+</html>

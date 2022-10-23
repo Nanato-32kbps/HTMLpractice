@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>
+テンプレート
+</title>
+</head>
+<body>
+<p><div id="d1"></div></p>
+<script type="text/javascript">
+  var result = " ";
+  var monster1_hp  = Math.floor(Math.random() * 100);
+  var monster1_atk = Math.floor(Math.random() * 50);
+  var monster2_hp  = Math.floor(Math.random() * 100);
+  var monster2_atk = Math.floor(Math.random() * 50);
+
+result = result + "モンスター1 HP:" + monster1_hp + "<br>";
+result = result + "モンスター1 ATK:" + monster1_atk + "<br>";
+result = result + "モンスター2 HP:" + monster2_hp + "<br>";
+result = result + "モンスター2 ATK:" + monster2_atk + "<br>";
+
+for(let i = 0; i < 3; i++){
+monster2_hp = monster2_hp - Math.floor(Math.random() * monster1_atk);
+result = result + "モンスター1の攻撃!モンスター2の残りHP" + monster2_hp + "<br>";
+
+monster1_hp = monster1_hp - Math.floor(Math.random() * monster2_atk);
+result = result + "モンスター2の攻撃!モンスター1の残りHP" + monster1_hp + "<br>";
+}
+
+if(monster1_hp > monster2_hp){
+  result = result + "モンスター1の勝ち!<br>";
+}else if(monster1_hp < monster2_hp){
+  result = result + "モンスター2の勝ち!<br>";
+}else{
+  result = result + "引き分け!"
+}
+  document.getElementById("d1").innerHTML = result;
+</script>
+</body>
+</html>

@@ -9,9 +9,15 @@
 <p><div id="d1"></div></p>
 <script type="text/javascript">
   function test(){
-  var result = "aabbbb";
+  var result = [];
+  result[0] = "大吉"
+  result[1] = "中吉"
+  result[2] = "吉"
+  result[3] = "凶"
+var num = Math.floor(Math.random() * 4)
+
   console.log("aaaa");
-  document.getElementById("d1").innerHTML = result;
+  document.getElementById("d1").innerHTML = result[num];
   console.log("iiii");
   }
 </script>

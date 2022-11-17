@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>ヘッダー</title>
+  </head>
+  <body>
+    <img src="../Image/soldier.png" style="position: absolute; top:120px; left:500;">
+    <canvas id = "c1" width="640px" height="480px"></canvas>
+    <p><div id="d1"></div></p>
+    <!-- <input type="button" value="コンソールの表示" onclick="kansu('テスト','完了')"> -->
+    <script type="text/javascript">
+    var ctx = document.getElementById("c1").getContext("2d");
+    var chr = new Image();
+    chr.src = "../Image/soldier.png";
+    chr.onload = function(){
+    renderer();
+    }
+    var x = 0;
+
+    function renderer(){
+      ctx.fillStyle = "#ff0000";
+      ctx.fillRect(0,0,640,480);
+      ctx.drawImage(chr,32,96,32,32,x,0,32,32);
+      x++;
+      var t = setTimeout(renderer,16);
+    }
+    </script>
+  </body>
+</html>

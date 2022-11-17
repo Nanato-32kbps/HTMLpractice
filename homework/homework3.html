@@ -6,11 +6,30 @@
 </head>
 <body>
 <p><div id = "d1"></div></p>
-<input type="button" onclick="attack()" value="ぐー">
+<input type="button" onclick="attack(0)" value="ぐー">
+<input type="button" onclick="attack(1)" value="ちょき">
+<input type="button" onclick="attack(2)" value="ぱー">
 <script type="text/javascript">
-function attack(){
+function attack(monster1_hand){
+ monster2_hand = Math.floor(Math.random() * 3);
+ if(monster1_hand == monster2_hand){
+    mag = 1;
+ }
+ else if(monster1_hand == 0){
+    if(monster2_hand == 1)mag = 1.5;
+    else mag = 0.5
+ }
+ else if(monster1_hand == 1){
+    if(monster2_hand == 2)mag = 1.5;
+    else mag = 0.5
+ }
+ else if(monster1_hand == 2){
+    if(monster2_hand == 0)mag = 1.5;
+    else mag = 0.5
+ }
+
  if(chk == 0){
-    monster_hp[1] = monster_hp[1] - Math.floor(Math.random() * monster_atk[0]);
+    monster_hp[1] = monster_hp[1] - Math.floor(Math.random() * monster_atk[0] * mag);
     result = result + "モンスター1の攻撃!モンスター2の残りHP" + monster_hp[1] + "<br>";
     if(monster_hp[1] < 1){
       chk = 1;

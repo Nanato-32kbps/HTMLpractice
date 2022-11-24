@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>
+テンプレート
+</title>
+</head>
+<body>
+<canvas id="c1" width="480px" height="320px"></canvas>
+<p><div id="d1"></div></p>
+<input type="button" value="コンソールに表示" onclick="kansu('テスト','完了')">
+<script type="text/javascript">
+  var directionText = "";
+  var chrX = 0;
+  var chrY = 0;
+  var direction = Math.floor(Math.random() * 4);
+
+  var $ = function(tagId){//★★追記
+    return document.getElementById(tagId);//★★追記
+  }//★★追記
+
+  var animeCounter = 0;//★★★追加
+  var animeChange = 5;//★★★追加
+  var loadX = 0;//★★★追加
+
+  function renderer(){
+    var ctx = $('c1').getContext("2d");//★★変更
+    ctx.fillStyle = "#259000";
+    ctx.fillRect(0,0,480,320);
+    ctx.drawImage(imgobj,(loadX * 32),(direction * 32),32,32,chrX + 224,chrY + 144,32,32);//★★★変更
+    animeCounter++;
+    if(animeCounter == animeChange){
+      animeCounter = 0;
+      loadX++;
+      if(loadX >= 3){
+        loadX = 0;
+      }
+    }
+
+  if(direction == 0){chrY = chrY + 1;directionText = "↓"};
+  if(direction == 1){chrX = chrX - 1;directionText = "←"};
+  if(direction == 2){chrX = chrX + 1;directionText = "→"};
+  if(direction == 3){chrY = chrY - 1;directionText = "↑"};
+
+    textDraw(ctx,36,224,260,"#000000",directionText);//★追記
+    var t = setTimeout(renderer, 16);
+  }
+
+  function textDraw(ctx,textSize,textX,textY,textColor,text){//★追記
+    ctx.font = textSize + "px 'MSPゴシック'";//★追記
+    ctx.fillStyle = textColor;//★追記
+    ctx.fillText(text, textX,textY+textSize);//★追記
+  }//★追記
+
+  var imgobj = new Image();
+  imgobj.src = "../Image/soldier.png";
+  imgobj.onload = function (){
+    renderer();
+  }
+</script>
+</body>
+</html>

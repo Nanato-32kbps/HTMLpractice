@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>
+テンプレート
+</title>
+</head>
+<body>
+<canvas id="c1"width="480px" height="320px"></canvas>
+<p><div id="d1"></div></p>
+<script type="text/javascript">
+ var chrX = 0; 
+ var srcX = 0; 
+ var fCount = 0; 
+ var imgobj = []; 
+ var imgsrc = "../Image/soldier.png,../Image/map.png"; 
+ var imgsrcArray = imgsrc.split(","); 
+ var imgLoaded = 0; 
+ for(var i = 0; i < imgsrcArray.length; i++){
+  imgobj[i] = new Image(); 
+  imgobj[i].src = imgsrcArray[i]; 
+  imgobj[i].onload = function (){
+   imgLoaded = imgLoaded + 1; 
+  }
+ } 
+
+ renderer(); 
+
+ function renderer(){
+  if(imgLoaded == imgsrcArray.length){
+   var ctx = $('c1').getContext("2d"); 
+   ctx.fillStyle = "#ff0000"; 
+   ctx.fillRect(0,0,480,320); 
+   for(var x = 0; x < 15; x++){
+    for(var y = 0; y < 10; y++){
+     ctx.drawImage(imgobj[1],0,0,32,32,x * 32,y * 32,32,32); 
+    } 
+   } 
+   ctx.font = 18 + "px 'MSPゴシック'"; 
+   ctx.fillStyle = "#ffffff"; 
+   ctx.fillText("X座標:" + chrX,50,(50 + 18)); 
+   ctx.drawImage(imgobj[0],srcX,64,32,32,chrX,50,32,32); 
+
+   chrX = chrX + 1; 
+   fCount = fCount + 1; 
+   if(fCount == 10){
+    fCount = 0; 
+   if(srcX == 0){
+     srcX = 32; 
+    }else if(srcX == 32){
+     srcX = 64; 
+    }else if(srcX == 64){
+     srcX = 0; 
+    } 
+   } 
+  } 
+  var t = setTimeout(renderer, 16); 
+ } 
+
+ function $(id){
+  return document.getElementById(id); 
+ }
+</script>
+</body>
+</html>

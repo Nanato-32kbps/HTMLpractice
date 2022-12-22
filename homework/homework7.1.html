@@ -1,0 +1,234 @@
+<html>
+<head>
+<title>
+テンプレート
+</title>
+</head>
+<body>
+<canvas id="c1" width="480px" height="320px"></canvas>
+<p><div id="d1"></div></p>
+<input type="button" value="コンソールに表示" onclick="kansu('テスト','完了')">
+<script type="text/javascript">
+  var chrObj = function(imageName, posX, posY, moveMode){
+    this.posX = posX;
+    this.posY = posY;
+    this.targetX = this.posX;
+    this.targetY = this.posY;
+    this.srcX = 0;
+    this.moveDirect = 0;
+    this.moveMode = moveMode;
+    this.imageName = imageName;
+    this.fCount = 0;
+  }
+ chrObj.prototype.move = function(mCtx, targetX, targetY){
+  if(this.moveX == 0){
+    if(targetX != "" && targetY != ""){
+    this.targetX = targetX;
+    this.targetY = targetY;
+    }
+  }
+  else if (this.moveMode == 1){
+    if (this.targetX == this.posX){
+      if (this.targetY == this.posY){
+        this.targetX = Math.floor(Math.random() * 442);
+        this.targetY = Math.floor(Math.random() * 288);
+      }
+    }
+  }
+
+  if (this.targetX != this.posX){
+    if(this.posX > this.targetX){
+      this.posX--;
+      this.moveDirect = 1;
+    }
+    else if (this.posX < this.targetX){
+      this.posX++;
+      this.moveDirect = 2
+    }
+  }
+  if (this.targetY != this.posY){
+    if(this.posY > this.targetY){
+      this.posY--;
+      this.moveDirect = 3;
+    }
+    else if(this.posY < this.targetY){
+      this.posY++;
+      this.moveDirect = 0
+    }
+  }
+  
+  if      (this.posX < 0)           this.posX = 0;
+  else if (this.posX > (480 - 32))  this.posX = (480 - 32);
+  if      (this.posY < 0)           this.posY = 0;
+  else if (this.posY > (320 - 32))  this.posY = (320 - 32);
+
+  this.fCount++;
+  if (this.fCount == 10){
+    this.fCount = 0;
+    if (thi .srcX == 0)this.srcX = 32;
+    else if (thi .srcX == 32)this.srcX = 64;
+    else if (thi .srcX == 64)this.srcX = 0;
+  }
+  mCtx.drawImage(imgobj[imgname[this.imageName]],this,srcX,(this.moveDirect * 32), 32, 32, this.posX, this.posY, 32, 32);
+ }
+
+ var mainChr;
+ var enemyChr = [];
+ var enemyNum = 10;
+ var imgobj = [];
+ var imagename = [];
+ var imgsrc = "../Image/hero.png,../Image/soldier.png,../Image/soldier.png,../Image/map.png";
+ var imgsrcArray = imgsrc.split(",");
+ var imgLoaded = 0;
+ var clickX = 0;
+ var clickY = 0;
+ var click = 0;
+
+ window.onload = function(){
+  window.addEventListener("mousedown",mDown,false);
+  window.addEventListener("mouseup",mUp,false);
+  window.addEventListener("mousemove",mMove,false);
+  window.addEventListener("keydown",kDown,false);
+ }
+  for(var i = 0; i < imgsrcArray.length; i++){
+    imgobj[i] = new Image();
+    imgobj[i].src = imgsrcArray[i];
+    imgname[imgsrcArray[i]] = i;
+    imgobj[i].onload = function (){
+      imgLoaded++;
+    }
+  }
+
+mainChr = new chrObj("../Image/hero.png", 100, 100, 0);
+for(var i = 0; i < enemyNum; i++){
+   enemyChr[i] = new chrObj("../Image/hero.png", Math.floor(Math.random() * 442), Math.floor(Math.random() * 288), 1);
+   }
+
+  var moveDirect = [];
+  var moveCounter = [];
+  for(var i = 0; i < chrNum; i++){
+    chrX[i] = 0;
+    chrY[i] = 0;
+    moveDirect[i] = 0;
+    moveCounter[i] = 0;
+  }
+
+  function mDown(inputEvent){
+    var bounds = $('c1').getBoundingClientRect();
+    clickX = inputEvent.clientX - bounds.left;
+    clickY = inputEvent.clientY - bounds.top;
+    click = 1;
+  }
+
+  function mUp(inputEvent){
+    //alert("up:" + inputEvent.clientX + "," + inputEvent.clientY);
+  }
+
+  function mMove(inputEvent){
+    //alert("move:" + inputEvent.clientX + "," + inputEvent.clientY);
+  }
+
+  function kDown(inputEvent){
+    if(inputEvent.key == "w"){
+      moveDirect[0] = 3;
+    }else if(inputEvent.key == "s"){
+      moveDirect[0] = 0;
+    }else if(inputEvent.key == "a"){
+      moveDirect[0] = 1;
+    }else if(inputEvent.key == "d"){
+      moveDirect[0] = 2;
+    }
+  }
+
+  renderer();
+
+  function renderer(){
+    if(imgLoaded == imgsrcArray.length){
+      var ctx = $('c1').getContext("2d");
+      ctx.fillStyle = "#ff0000";
+      ctx.fillRect(0,0,480,320);
+      for(var x = 0; x < 15; x++){
+        for(var y = 0; y < 10; y++){
+          ctx.drawImage(imgobj[3],0,0,32,32,x * 32,y * 32,32,32);
+        }
+      }
+      ctx.font = 18 + "px 'MSPゴシック'";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText("X座標：" + chrX[0],50,(50 + 18));
+
+      for(var i = 1; i < 3; i++){
+        moveCounter[i] = moveCounter[i] + 1;
+        if(moveCounter[i] == 96){
+          moveCounter[i] = 0;
+          moveDirect[i] = Math.floor(Math.random() * 4);
+        }
+      }
+
+      for(var i = 0; i < chrNum; i++){
+        ctx.drawImage(imgobj[i],srcX,(moveDirect[i] * 32),32,32,chrX[i],chrY[i],32,32);
+      }
+      if(click == 1){
+        if(clickX != chrX[0]){
+            if(chrX[0] > clickX){
+              chrX[0] = chrX[0] - 1;
+            }else if(chrX[0] < clickX){
+              chrX[0] = chrX[0] + 1;
+            }
+        }
+        if(clickY != chrY[0]){
+            if(chrY[0] > clickY){
+              chrY[0] = chrY[0] - 1;
+            }else if(chrY[0] < clickY){
+              chrY[0] = chrY[0] + 1;
+            }
+        }
+        if(clickX == chrX[0]){
+          if(clickY == chrY[0]){
+            click = 0;
+          }
+        }
+      }
+
+      for(var i = 1; i < 3; i++){
+        if(moveDirect[i] == 0){
+          chrY[i] = chrY[i] + 1;
+        }else if(moveDirect[i] == 1){
+          chrX[i] = chrX[i] - 1;
+        }else if(moveDirect[i] == 2){
+          chrX[i] = chrX[i] + 1;
+        }else if(moveDirect[i] == 3){
+          chrY[i] = chrY[i] - 1;
+        }
+        if(chrX[i] < 0){
+          chrX[i] = 0;
+        }else if(chrX[i] > (480 - 32)){
+          chrX[i] = (480 - 32);
+        }
+        if(chrY[i] < 0){
+          chrY[i] = 0;
+        }else if(chrY[i] > (320 - 32)){
+          chrY[i] = (320 - 32);
+        }
+      }
+
+      fCount = fCount + 1;
+      if(fCount == 10){
+        fCount = 0;
+        if(srcX == 0){
+          srcX = 32;
+        }else if(srcX == 32){
+          srcX = 64;
+        }else if(srcX == 64){
+          srcX = 0;
+        }
+      }
+    }
+    var t = setTimeout(renderer, 16);
+  }
+
+  function $(id){
+    return document.getElementById(id);
+  }
+</script>
+</body>
+</html>

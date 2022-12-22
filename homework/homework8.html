@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>
+テンプレート
+</title>
+</head>
+<body>
+<canvas id="c1" width="480px" height="320px"></canvas>
+<p><div id="d1"></div></p>
+<input type="button" value="コンソールに表示" onclick="kansu('テスト','完了')">
+<script type="text/javascript">
+  var mapData = [
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,10,0,0,0,0,0,0,10,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,10,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,12],
+      [12,0,0,0,0,0,0,0,0,0,0,0,0,12,12]
+  ]
+
+  var chrObj = function(imageName, posX, posY, moveMode) {
+    this.posX = posX;
+    this.posY = posY;
+    this.targetX = this.posX;
+    this.targetY = this.posY;
+    this.srcX = 0;
+    this.moveDirect = 0;
+    this.moveMode = moveMode;
+    this.imageName = imageName;
+    this.fCount = 0;
+    this.hp = 1;
+  }
+  
+  chrObj.prototype.move = function(mCtx, targetX, targetY) {
+    if (this.moveMode == 0) {
+      if (targetX != "" && targetY != "") {
+        this.targetX = targetX;
+        this.targetY = targetY;
+      }
+    } else if (this.moveMode == 1) {
+      if (this.targetX == this.posX) {
+        if (this.targetY == this.posY) {
+          this.targetX = Math.floor(Math.random() * 442);
+          this.targetY = Math.floor(Math.random() * 288);
+        }
+      }
+    }
+    if (this.targetX != this.posX) {
+      if (this.posX > this.targetX) {
+        this.posX --;
+        this.moveDirect = 1;
+      } else if (this.posX < this.targetX) {
+        this.posX ++;
+        this.moveDirect = 2;
+      }
+    }
+    if (this.targetY != this.posY) {
+      if (this.posY > this.targetY) {
+        this.posY --;
+        this.moveDirect = 3;
+      } else if (this.posY < this.targetY) {
+        this.posY ++;
+        this.moveDirect = 0;
+      }
+    }
+    if (this.posX < 0) {
+      this.posX = 0;
+    } else if (this.posX > (480 - 32)) {
+      this.posX = 480 - 32;
+    }
+    if (this.posY < 0) {
+      this.posY = 0;
+    } else if (this.posY > (320 - 32)) {
+      this.posY = 320 - 32;
+    }
+
+    this.fCount ++;
+    if (this.fCount == 10) {
+      this.fCount = 0;
+      if (this.srcX == 0) {
+        this.srcX = 32;
+      } else if (this.srcX == 32) {
+        this.srcX = 64;
+      } else if (this.srcX == 64) {
+        this.srcX = 0;
+      }
+    }
+    if (this.hp > 0) mCtx.drawImage(imgobj[imgname[this.imageName]], this.srcX, (this.moveDirect * 32), 32, 32, this.posX, this.posY, 32, 32);
+  }
+
+  var mainChr;
+  var enemyChr = [];
+  var enemyNum = 10;
+  var imgobj = [];
+  var imgname = [];
+  var imgsrc = "../Image/hero.png,../Image/soldier.png,../Image/map.png";
+  var imgsrcArray = imgsrc.split(",");
+  var imgLoaded = 0;
+  var clickX = 0;
+  var clickY = 0;
+  var click = 0;
+
+  window.onload = function () {
+    window.addEventListener("mousedown", mDown, false);
+    window.addEventListener("mouseup", mUp, false);
+    window.addEventListener("mousemove", mMove, false);
+    window.addEventListener("keydown", kDown, false);
+
+    for (var i = 0; i < imgsrcArray.length; i++) {
+      imgobj[i] = new Image();
+      imgobj[i].src = imgsrcArray[i];
+      imgname[imgsrcArray[i]] = i;
+      imgobj[i].onload = function () {
+        imgLoaded ++;
+      }
+    }
+
+    mainChr = new chrObj("./assets/hero.png", 100, 100, 0);
+    for (var i = 0; i < enemyNum; i++) {
+      enemyChr[i] = new chrObj("./assets/soldier.png", Math.floor(Math.random() * 442), Math.floor(Math.random() * 288), 1);
+    }
+  }
+
+  function mDown(inputEvent) {
+    var bounds = $('c1').getBoundingClientRect();
+    clickX = inputEvent.clientX - bounds.left;
+    clickY = inputEvent.clientY - bounds.top;
+    click = 1;
+  }
+
+  function mUp(inputEvent) {
+    // alert("up:" + inputEvent.clientX + "," + inputEvent.clientY);
+  }
+
+  function mMove(inputEvent) {
+    // alert("move:" + inputEvent.clientX + "," + inputEvent.clientY);
+  }
+
+  function kDown(inputEvent) {
+    if (inputEvent.key == "w") {
+      clickX = mainChr.posX;
+      clickY = mainChr.posY--;
+      click = 1;
+    } else if (inputEvent.key == "s") {
+      clickX = mainChr.posX;
+      clickY = mainChr.posY++;
+      click = 1;
+    } else if (inputEvent.key == "a") {
+      clickX = mainChr.posX--;
+      clickY = mainChr.posY;
+      click = 1;
+    } else if (inputEvent.key == "d") {
+      clickX = mainChr.posX++;
+      clickY = mainChr.posY;
+      click = 1;
+    }
+  }
+
+  renderer();
+
+  function renderer() {
+    if (imgLoaded == imgsrcArray.length) {
+      var ctx = $('c1').getContext("2d");
+      ctx.fillStyle = "#ff0000";
+      ctx.fillRect(0,0,480,320);
+      for (var x = 0; x < 15; x++) {
+        for (var y = 0; y < 10; y++) {
+          ctx.drawImage(imgobj[2], 0, 0, 32, 32, x * 32, y * 32, 32, 32);
+        }
+      }
+
+      for (var x = 0; x < 15; x++) {
+        for (var y = 0; y < 10; y++) {
+          var partsY = Math.floor(mapData[y][x] / 8);
+          var partsX = mapData[y][x] % 8;
+          ctx.drawImage(imgobj[2], partsX * 32, partsY * 32, 32, 32, x * 32, y * 32, 32, 32);
+        }
+      }
+      
+      if (click == 1) {
+        click = 0;
+        mainChr.move(ctx, clickX, clickY);
+      } else {
+        mainChr.move(ctx, "", "");
+      }
+      for (var i = 0; i < enemyNum; i++) {
+        var hit = hitTest(mainChr.posX + 16, mainChr.posY + 16, 16, enemyChr[i].posX + 16, enemyChr[i].posY + 16, 16);
+        if (hit) {
+          enemyChr[i].hp--;
+        }
+        enemyChr[i].move(ctx, "", "");
+      }
+    }
+    var t = setTimeout(renderer, 16);
+  }
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function hitTest(x1, y1, r1, x2, y2, r2) {
+    var lineC = ((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1));
+    var lineAB = (r2 + r1) * (r2 + r1);
+
+    if (lineAB >= lineC) return true;
+    else return false;
+  }
+
+</script>
+</body>
+</html>
